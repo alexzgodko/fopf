@@ -2,7 +2,9 @@
 using namespace std;
 #define int long long
 
-const int t = 10;  // количество точек на графике
+// ns - в каких n замеряем время
+const vector<int> ns = {10,   100,  1000, 2000, 3000, 4000,
+                        5000, 6000, 7000, 8000, 9000, 10000};
 const int k = 5;  // количество замеров времени для одной точки
 
 // пытаемся добавить элементы 0 ... n в массив a,
@@ -44,9 +46,9 @@ void solve3(int n) {
 }
 
 signed main() {
-  vector<vector<int>> dp(3, vector<int>(t, 0));
-  for (int i = 0; i < t; ++i) {
-    int n = (i + 1) * 1000;
+  vector<vector<int>> dp(3, vector<int>(ns.size(), 0));
+  for (int i = 0; i < ns.size(); ++i) {
+    int n = ns[i];
     for (int j = 0; j < k; ++j) {  // solve1
       auto begin = std::chrono::steady_clock::now();
       solve1(n);
@@ -72,9 +74,23 @@ signed main() {
       dp[2][i] += time_span.count();
     }
   }
-  for (int i = 0; i < 3; ++i) {
-    cout << "Solve" << i + 1 << " results:" << endl;
-    for (int j = 0; j < t; ++j) cout << dp[i][j] / k << endl;
-    cout << endl;
+  ofstream f1;
+  f1.open("01.txt");
+  for (int j = 0; j < ns.size(); ++j) {
+    f1 << dp[0][j] / k;
+    if (j != ns.size() - 1) f1 << ", ";
   }
+  f1.close();
+  f1.open("02.txt");
+  for (int j = 0; j < ns.size(); ++j) {
+    f1 << dp[1][j] / k;
+    if (j != ns.size() - 1) f1 << ", ";
+  }
+  f1.close();
+  f1.open("03.txt");
+  for (int j = 0; j < ns.size(); ++j) {
+    f1 << dp[2][j] / k;
+    if (j != ns.size() - 1) f1 << ", ";
+  }
+  f1.close();
 }
